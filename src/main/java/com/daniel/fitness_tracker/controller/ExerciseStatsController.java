@@ -1,5 +1,6 @@
 package com.daniel.fitness_tracker.controller;
 
+import com.daniel.fitness_tracker.dto.LastSetDetailResponse;
 import com.daniel.fitness_tracker.dto.OneRepMaxResponse;
 import com.daniel.fitness_tracker.dto.VolumeResponse;
 import com.daniel.fitness_tracker.model.SetEntry;
@@ -35,7 +36,16 @@ public class ExerciseStatsController {
                         ? Optional.empty()
                         : setEntryRepository.findTopByWorkoutIdAndExerciseIdOrderBySetNumberDesc(workoutId, exerciseId);
 
-        return new LastSetResponse(lastInWorkout.orElse(null), lastOverall.orElse(null));
+        // Convert entities to DTOs
+        LastSetDetailResponse lastInWorkoutDto = lastInWorkout
+                .map(this::toLastSetDetailResponse)
+                .orElse(null);
+
+        LastSetDetailResponse lastOverallDto = lastOverall
+                .map(this::toLastSetDetailResponse)
+                .orElse(null);
+
+        return new LastSetResponse(lastInWorkoutDto, lastOverallDto);
     }
 
     @GetMapping("/{exerciseId}/volume")
@@ -82,5 +92,23 @@ public class ExerciseStatsController {
         return new OneRepMaxResponse(exerciseId, estimatedMax, set.getWeight(), set.getReps());
     }
 
-    public record LastSetResponse(SetEntry lastInWorkout, SetEntry lastOverall) {}
+    // Helper method to convert SetEntry entity to DTO
+    private LastSetDetailResponse toLastSetDetailResponse(SetEntry set) {
+        return new LastSetDetailResponse(
+                set.getId(),
+                set.getWorkout().getId(),
+                set.getExercise().getId(),
+                set.getReps(),
+                set.getWeight(),
+                set.getSetNumber(),
+                set.getRir(),
+                set.getCreatedAt()
+        );
+    }
+
+    // Response record with DTOs instead of entities
+    public record LastSetResponse(
+            LastSetDetailResponse lastInWorkout,
+            LastSetDetailResponse lastOverall
+    ) {}
 }
