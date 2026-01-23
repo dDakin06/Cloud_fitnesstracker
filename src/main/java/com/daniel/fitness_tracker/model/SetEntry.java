@@ -19,12 +19,6 @@ public class SetEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = true)
-    private Integer rir;
-
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
-
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "workout_id", nullable = false)
     private Workout workout;
@@ -42,6 +36,13 @@ public class SetEntry {
     @Column(name = "set_number", nullable = false)
     private int setNumber;
 
+    @Column(nullable = true)
+    private Integer rir;
+
+    @Column(nullable = false, updatable = false)
+    private Instant createdAt;
+
+    // Required by JPA
     protected SetEntry() {}
 
     public SetEntry(Workout workout, Exercise exercise, int reps, double weight, int setNumber, Integer rir) {
@@ -54,38 +55,57 @@ public class SetEntry {
     }
 
     @PrePersist
-    void onCreate() {
+    protected void onCreate() {
         this.createdAt = Instant.now();
     }
 
-    // getters/setters...
-}
+    // Getters
+    public Long getId() {
+        return id;
+    }
 
+    public Workout getWorkout() {
+        return workout;
+    }
 
-public Long getId() { return id; }
+    public Exercise getExercise() {
+        return exercise;
+    }
 
-    public Workout getWorkout() { return workout; }
+    public int getReps() {
+        return reps;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public int getSetNumber() {
+        return setNumber;
+    }
 
     public Integer getRir() {
         return rir;
     }
 
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    // Setters
+    public void setReps(int reps) {
+        this.reps = reps;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public void setSetNumber(int setNumber) {
+        this.setNumber = setNumber;
+    }
+
     public void setRir(Integer rir) {
         this.rir = rir;
     }
-    public Exercise getExercise() { return exercise; }
-
-    public int getReps() { return reps; }
-
-    public void setReps(int reps) { this.reps = reps; }
-
-    public double getWeight() { return weight; }
-    public Instant getCreatedAt() { return createdAt; }
-
-
-    public void setWeight(double weight) { this.weight = weight; }
-
-    public int getSetNumber() { return setNumber; }
-
-    public void setSetNumber(int setNumber) { this.setNumber = setNumber; }
 }

@@ -21,7 +21,6 @@ public class DataSeeder {
     ) {
         return args -> {
 
-            // ---- 1️⃣ Seed Muscle Groups ----
             if (muscleGroupRepo.count() == 0) {
 
                 MuscleGroup chest = muscleGroupRepo.save(new MuscleGroup("CHEST"));
@@ -30,13 +29,13 @@ public class DataSeeder {
                 MuscleGroup shoulders = muscleGroupRepo.save(new MuscleGroup("SHOULDERS"));
                 MuscleGroup arms = muscleGroupRepo.save(new MuscleGroup("ARMS"));
 
-                // ---- 2️⃣ Seed Exercises ----
+
                 Exercise bench = exerciseRepo.save(new Exercise("Bench Press", chest));
                 Exercise squat = exerciseRepo.save(new Exercise("Squat", legs));
                 Exercise row = exerciseRepo.save(new Exercise("Barbell Row", back));
                 Exercise shoulderPress = exerciseRepo.save(new Exercise("Overhead Press", shoulders));
 
-                // ---- 3️⃣ Seed Workouts ----
+
                 Workout workout1 = workoutRepo.save(
                         new Workout(LocalDateTime.now().minusDays(2), LocalDate.now().minusDays(2))
                 );
@@ -45,7 +44,7 @@ public class DataSeeder {
                         new Workout(LocalDateTime.now().minusDays(1), LocalDate.now().minusDays(1))
                 );
 
-                // ---- 4️⃣ Seed Sets ----
+
                 setEntryRepo.save(new SetEntry(workout1, bench, 10, 60, 1, 2));
                 setEntryRepo.save(new SetEntry(workout1, bench, 8, 65, 2, 1));
                 setEntryRepo.save(new SetEntry(workout1, squat, 5, 100, 1, 2));
