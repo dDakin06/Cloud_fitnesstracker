@@ -57,18 +57,11 @@ public interface SetEntryRepository extends JpaRepository<SetEntry, Long> {
             @Param("to") LocalDate to
     );
 
-    // 5) Calculate total volume for an exercise
-    @Query("""
-        SELECT SUM(se.weight * se.reps)
-        FROM SetEntry se
-        JOIN se.workout w
-        WHERE se.exercise.id = :exerciseId
-        AND w.performedAt BETWEEN :from AND :to
-    """)
-    Double calculateTotalVolume(
-            @Param("exerciseId") Long exerciseId,
-            @Param("from") LocalDate from,
-            @Param("to") LocalDate to
+    // 5) NEW: Find sets for an exercise within a date range (for manual volume calculation)
+    List<SetEntry> findByExerciseIdAndWorkout_PerformedAtBetween(
+            Long exerciseId,
+            LocalDate fromDate,
+            LocalDate toDate
     );
 
     // 6) Find heaviest set for an exercise (for 1RM estimation)
